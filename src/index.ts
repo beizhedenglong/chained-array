@@ -20,8 +20,6 @@ export const pick = <T, K extends keyof T>(o: T, keys: K[]): Pick<T, K> =>
 class ChainedArray<T> {
   public where = this.filter;
 
-  public count = this.size;
-
   private items: T[];
   constructor(items: T[] = []) {
     this.items = items;
@@ -75,15 +73,19 @@ class ChainedArray<T> {
     const result: T[] = this.items.filter(f);
     return new ChainedArray(result);
   }
-  public forEach(f: (item: T) => void): void {
+  public reject(f: (item: T) => boolean): ChainedArray<T> {
+    return this.filter((item) => !f(item));
+  }
+  public forEach(f: (item: T) => void): ChainedArray<T> {
     this.items.forEach(f);
+    return this;
   }
   public reduce<K>(f: (acc: K, item: T) => K, initial: K): K {
     return this.items.reduce(f, initial);
   }
   public sort(f?: CompareFn<T>): ChainedArray<T> {
     this.items.sort(f);
-    return new ChainedArray(this.items);
+    return this;
   }
   public push(item: T): ChainedArray<T> {
     this.items.push(item);
@@ -119,6 +121,17 @@ class ChainedArray<T> {
       });
       return acc;
     }, new ChainedArray<IMerged<T, K>>([]));
+  }
+  public count(f: (item: T) => any = identity): number {
+    const map = {};
+    return this.items.reduce((total, item) => {
+      const key = f(item);
+      if (!map[key]) {
+        map[key] = true;
+        total += 1;
+      }
+      return total;
+    }, 0);
   }
 }
 

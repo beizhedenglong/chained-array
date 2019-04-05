@@ -8,10 +8,10 @@ interface IUser {
   birthdate: string;
   added: string;
 }
-const users: IUser[] = require("./users.json");
+const users: IUser[] = require("./__tests__/users.json");
 
 const arr = new ChainedArray(users);
 
-console.log(
-  arr.groupBy(({email}) => email.length.toString()),
-);
+const arr1 = arr.map(({ id }) => id);
+
+console.log(arr, arr1);
