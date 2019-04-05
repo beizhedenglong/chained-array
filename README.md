@@ -22,8 +22,8 @@ interface IPost {
   content: string;
   date: string;
 }
-const users: IUser[] = require("./__tests__/users.json");
-const posts: IPost[] = require("./__tests__/posts.json");
+const users: IUser[] = require("./tests/users.json");
+const posts: IPost[] = require("./tests/posts.json");
 
 const chainedUsers = new ChainedArray(users);
 

@@ -16,8 +16,8 @@ interface IPost {
   content: string;
   date: string;
 }
-const users: IUser[] = require("./__tests__/users.json");
-const posts: IPost[] = require("./__tests__/posts.json");
+const users: IUser[] = require("./tests/users.json");
+const posts: IPost[] = require("./tests/posts.json");
 
 const chainedUsers = new ChainedArray(users);
 
@@ -25,6 +25,9 @@ const result = chainedUsers
   .filter(({ email }) => email.length > 10)
   .distinct(({ last_name }) => last_name)
   .sort((a, b) => b.id - a.id)
-  .innerJoin(posts, (user, post) => user.id - post.author_id);
+  .innerJoin(posts, (user, post) => user.id - post.author_id)
+  .map(({ left, right }) => left.id + "-" + right.author_id)
+  .toArray()
+  .join(",");
 
 console.log(result);
